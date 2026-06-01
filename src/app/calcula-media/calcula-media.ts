@@ -1,25 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, 
+         Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-calcula-media',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './calcula-media.html',
   styleUrl: './calcula-media.scss',
 })
 export class CalculaMedia {
   protected mediaParcial: number | undefined
   protected mediaFinal: number | undefined
-  
+  //O serviço FormBuilder facilita a configuração do form Group
+  //# - atributo privado em tempo de compilação e execução
+  #formBuilder = inject(FormBuilder);
+  protected formMedia: FormGroup;
+
   constructor() {
+    this.formMedia = this.#formBuilder.group(
+    {
+      bim1: [undefined, [Validators.required, 
+                         Validators.min(0), 
+                         Validators.max(100)]],
+      bim2: [undefined, [Validators.required, 
+                         Validators.min(0), 
+                         Validators.max(100)]],
+      bim3: [undefined, [Validators.required,
+                         Validators.min(0), 
+                         Validators.max(100)]],
+      bim4: [undefined, [Validators.required,
+                         Validators.min(0), 
+                         Validators.max(100)]],
+    })
+
     this.mediaParcial = undefined
     this.mediaFinal = undefined
+
   }
   
+  calcularMediaParcial() {
+      const notas = this.formMedia.value
 
-  calcularMediaParcial(b1: number, b2: number, 
-                       b3: number, b4: number) {
       this.mediaParcial = 
-        (b1 * 2 + b2 * 2 + b3 * 3 + b4 * 3) / 10
+        (notas.bim1 * 2 + notas.bim2 * 2 + 
+         notas.bim3 * 3 + notas.bim4 * 3) / 10
   }
 
 
